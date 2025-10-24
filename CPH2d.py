@@ -101,6 +101,7 @@ class ChiralPersistentHomology2D:
         triangle_coords = np.array([[self.dataset[tri[0]], self.dataset[tri[1]], self.dataset[tri[2]]] for tri in triangles])
         ab = triangle_coords[:, 1] - triangle_coords[:, 0]
         ac = triangle_coords[:, 2] - triangle_coords[:, 0]
+        #print(ab.shape, ac.shape)
         oriented_area = ab[:, 0] * ac[:, 1] - ab[:, 1] * ac[:, 0]
 
         is_right_handed = oriented_area > 0
