@@ -2,3 +2,14 @@
 .DS_Store
 tutorial/
 __pycache__/
+.data/
+data/
+*.fits
+*.fits.gz
+*.hdf5
+*.h5
+*.csv
+*.dat
+*.txt
+*.npy
+*.npz
