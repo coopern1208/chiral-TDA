@@ -1,3 +1,6 @@
+from typing import Any
+
+
 import gudhi as gd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -59,7 +62,7 @@ class ChiralPersistentHomology2D:
         LH_boundary_edges = extract_edges(LH_triangles)
         RH_boundary_edges = extract_edges(RH_triangles)
 
-        boundary_edges = list(set(LH_boundary_edges + RH_boundary_edges))
+        boundary_edges = list[tuple[Any, ...]](set(LH_boundary_edges + RH_boundary_edges))
         free_edges = [e for e in edges if tuple(e) not in boundary_edges]
 
         LH_boundary_edges_alpha = [edges_alpha[edges.index(edge)] for edge in LH_boundary_edges]

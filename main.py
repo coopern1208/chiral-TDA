@@ -15,16 +15,16 @@ print(bottleneck_distance)
 # wasserstein_distance = chiral_ph.wasserstein_distance()
 # print(wasserstein_distance)
 
-for i in range(10):
-    np.random.seed(i+10)
-    dataset = np.random.uniform(-1, 1, (2000, 3))
-    start_time = time.time()
-    chiral_ph = ChiralPersistentHomology2D(dataset)
+# for i in range(10):
+#     np.random.seed(i+10)
+#     dataset = np.random.uniform(-1, 1, (2000, 3))
+#     start_time = time.time()
+#     chiral_ph = ChiralPersistentHomology2D(dataset)
 
-    bottleneck_distance = chiral_ph.bottleneck_distance()
-    print(bottleneck_distance)
-    end_time = time.time()
-    print(f"Time taken: {end_time - start_time} seconds")
+#     bottleneck_distance = chiral_ph.bottleneck_distance()
+#     print(bottleneck_distance)
+#     end_time = time.time()
+#     print(f"Time taken: {end_time - start_time} seconds")
 
 
 
