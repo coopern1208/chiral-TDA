@@ -15,6 +15,7 @@ class ChiralPersistentHomology2D:
         alpha_complex = gd.AlphaComplex(points=self.dataset[:, :2])
         simplex_tree = alpha_complex.create_simplex_tree()
         
+        # ---- edges ---- #
         edges_and_alpha = [list(s[0]) + [s[1]] for s in simplex_tree.get_skeleton(1) if len(s[0]) == 2]
         edges = np.array(edges_and_alpha, dtype=int)[:,:2].tolist()
         edges = [tuple(sorted(edge)) for edge in edges]
