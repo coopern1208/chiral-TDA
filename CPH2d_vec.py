@@ -13,6 +13,7 @@ class ChiralPersistentHomology2D:
         self.dataset: np.ndarray = dataset
         self.num_galaxies: int = dataset.shape[0]
         self.data_locations: np.ndarray = self.dataset[:, :2]
+
         self.max_alpha: float = max_alpha
 
     def _randomize_luminosity(self, seed: int = 42):
@@ -124,26 +125,55 @@ class ChiralPersistentHomology2D:
         gd.plot_persistence_diagram(LH_dgm, legend = True)
         plt.xlim(-0.0003, 0.01)
         plt.ylim(-0.0003, 0.01)
-        plt.savefig('figs/LH_dgm_fast.png', dpi=300)
+        plt.savefig('figs/LH_dgm_vec.png', dpi=300)
         plt.close()
 
         RH_dgm = [(dim, (birth, death)) for dim, (birth, death) in RH_dgm if death != float('inf')]
         gd.plot_persistence_diagram(RH_dgm, legend = True)
         plt.xlim(-0.0003, 0.01)
         plt.ylim(-0.0003, 0.01)
-        plt.savefig('figs/RH_dgm_fast.png', dpi=300)
+        plt.savefig('figs/RH_dgm_vec.png', dpi=300)
         plt.close()
 
+    def bottleneck_distance(self):
+        LH_dgm, RH_dgm = self.chiral_persistence()
+        dim0_LH_dgm = [x[1] for x in LH_dgm if x[0] == 0]
+        dim0_RH_dgm = [x[1] for x in RH_dgm if x[0] == 0]
+        dim0_bottleneck_distance = gd.bottleneck_distance(dim0_LH_dgm, dim0_RH_dgm)
+
+        dim1_LH_dgm = [x[1] for x in LH_dgm if x[0] == 1]
+        dim1_RH_dgm = [x[1] for x in RH_dgm if x[0] == 1]
+        dim1_bottleneck_distance = gd.bottleneck_distance(dim1_LH_dgm, dim1_RH_dgm)
+
+        return {0: dim0_bottleneck_distance, 1: dim1_bottleneck_distance}
+
 if __name__ == "__main__":
-    np.random.seed(42)
-    dataset = np.random.uniform(-1, 1, (10000, 3))
+    # np.random.seed(42)
+    # dataset = np.random.uniform(-1, 1, (10000, 3))
+    from fake_data_func import generate_fake_data
+    dataset = generate_fake_data(n_tri= 1000, seed=33)
 
-    import time
-    start_time = time.time()
-    
     chiral_ph = ChiralPersistentHomology2D(dataset, max_alpha=0.05)
-    LH_dgm, RH_dgm = chiral_ph.chiral_persistence()
-    print(LH_dgm[:5])
-    print(RH_dgm[:5])
+    #chiral_ph.plot_chiral_persistence()
+    chiral_bottleneck_distance = chiral_ph.bottleneck_distance()[1]
+    print(chiral_bottleneck_distance)
+    # for i in range(10):
+    #     dataset = generate_fake_data(n_tri= 1000, seed=i+100)
 
-    print(f"Time taken to compute persistence: {time.time() - start_time} seconds")
+    #     chiral_ph = ChiralPersistentHomology2D(dataset, max_alpha=0.05)
+    #     #chiral_ph.plot_chiral_persistence()
+    #     chiral_bottleneck_distance = chiral_ph.bottleneck_distance()[1]
+    #     print(chiral_bottleneck_distance)
+
+    bottleneck_distances = []
+    for i in range(20):
+        randomized_dataset = chiral_ph._randomize_luminosity(seed=i+100)
+        chiral_ph = ChiralPersistentHomology2D(randomized_dataset, max_alpha=0.05)
+        bottleneck_distance = chiral_ph.bottleneck_distance()
+        bottleneck_distances.append(bottleneck_distance[1])
+        print(f"Randomized {i}, bottleneck distance: {bottleneck_distance}")
+
+    mean = np.mean(bottleneck_distances)
+    std = np.std(bottleneck_distances)
+    print(f"Mean: {mean}, Std: {std}")
+    print(f"PV significance: {(chiral_bottleneck_distance-mean)/std} sigma")
