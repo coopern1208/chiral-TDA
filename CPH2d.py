@@ -171,14 +171,14 @@ class ChiralPersistentHomology2D:
         gd.plot_persistence_diagram(LH_dgm, legend = True)
         plt.xlim(-0.0003, 0.01)
         plt.ylim(-0.0003, 0.01)
-        plt.savefig('figs/LH_dgm.png', dpi=300)
+        plt.savefig('figs/LH_dgm_slow.png', dpi=300)
         plt.close()
 
         RH_dgm = [(dim, (birth, death)) for dim, (birth, death) in RH_dgm if death != float('inf')]
         gd.plot_persistence_diagram(RH_dgm, legend = True)
         plt.xlim(-0.0003, 0.01)
         plt.ylim(-0.0003, 0.01)
-        plt.savefig('figs/RH_dgm.png', dpi=300)
+        plt.savefig('figs/RH_dgm_slow.png', dpi=300)
         plt.close()
 
     def bottleneck_distance(self):
@@ -210,3 +210,9 @@ class ChiralPersistentHomology2D:
         dim1_RH_dgm = extract_diagram(RH_dgm, 1)
         dim1_wasserstein_distance = ws.wasserstein_distance(dim1_LH_dgm, dim1_RH_dgm, order=q)
         return {0: dim0_wasserstein_distance, 1: dim1_wasserstein_distance}
+
+if __name__ == "__main__":
+    np.random.seed(42)
+    dataset = np.random.uniform(-1, 1, (1000, 3))
+    chiral_ph = ChiralPersistentHomology2D(dataset, max_alpha=0.05)
+    chiral_ph.plot_chiral_persistence()
